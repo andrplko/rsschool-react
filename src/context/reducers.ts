@@ -6,7 +6,6 @@ export enum Types {
   SetCurrentPage = 'SET_CURRENT_PAGE',
   SetPerPage = 'SET_PER_PAGE',
   SetTotalPages = 'SET_TOTAL_PAGES',
-  SetIsOpen = 'SET_IS_OPEN',
   SetIsLoading = 'SET_IS_LOADING',
   SetReleases = 'SET_RELEASES',
 }
@@ -16,9 +15,9 @@ export type ActionType =
   | { type: Types.SetCurrentPage; payload: number }
   | { type: Types.SetPerPage; payload: number }
   | { type: Types.SetTotalPages; payload: number }
-  | { type: Types.SetIsOpen; payload: boolean }
   | { type: Types.SetIsLoading; payload: boolean }
-  | { type: Types.SetReleases; payload: Release[] };
+  | { type: Types.SetReleases; payload: Release[] }
+  | Record<string, never>;
 
 const appReducer = (state: InitialStateType, action: ActionType) => {
   switch (action.type) {
@@ -33,9 +32,6 @@ const appReducer = (state: InitialStateType, action: ActionType) => {
     }
     case Types.SetTotalPages: {
       return { ...state, totalPages: action.payload };
-    }
-    case Types.SetIsOpen: {
-      return { ...state, isOpen: action.payload };
     }
     case Types.SetIsLoading: {
       return { ...state, isLoading: action.payload };

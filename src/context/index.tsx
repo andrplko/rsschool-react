@@ -10,7 +10,6 @@ import {
   DEFAULT_CURRENT_PAGE,
   DEFAULT_PER_PAGE,
   DEFAULT_TOTAL_PAGES,
-  LOCAL_STORAGE_IS_OPEN,
   LOCAL_STORAGE_SEARCH_TERM,
 } from '../constants';
 import { ActionType, appReducer } from './reducers';
@@ -20,7 +19,6 @@ export type InitialStateType = {
   currentPage: number;
   perPage: number;
   totalPages: number;
-  isOpen: boolean;
   isLoading: boolean;
   releases: Release[];
 };
@@ -30,9 +28,6 @@ const initialState: InitialStateType = {
   perPage: DEFAULT_PER_PAGE,
   currentPage: DEFAULT_CURRENT_PAGE,
   totalPages: DEFAULT_TOTAL_PAGES,
-  isOpen: localStorage.getItem(LOCAL_STORAGE_IS_OPEN)
-    ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_IS_OPEN)!)
-    : false,
   isLoading: true,
   releases: [],
 };
@@ -54,17 +49,8 @@ export const useAppContext = () => {
   return context;
 };
 
-const AppContextProvider = ({
-  children,
-  mockData,
-}: {
-  children: ReactNode;
-  mockData?: Partial<InitialStateType>;
-}) => {
-  const [state, dispatch] = useReducer(appReducer, {
-    ...initialState,
-    ...mockData,
-  });
+const AppContextProvider = ({ children }: { children: ReactNode }) => {
+  const [state, dispatch] = useReducer(appReducer, initialState);
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>

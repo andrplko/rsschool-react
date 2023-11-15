@@ -22,10 +22,6 @@ const setIsLoading = (dispatch: Dispatch<ActionType>, payload: boolean) => {
   dispatch({ type: Types.SetIsLoading, payload });
 };
 
-const setIsOpen = (dispatch: Dispatch<ActionType>, payload: boolean) => {
-  dispatch({ type: Types.SetIsOpen, payload });
-};
-
 const setReleases = (dispatch: Dispatch<ActionType>, payload: Release[]) => {
   dispatch({ type: Types.SetReleases, payload });
 };
@@ -36,6 +32,5 @@ export {
   setPerPage,
   setTotalPages,
   setIsLoading,
-  setIsOpen,
   setReleases,
 };

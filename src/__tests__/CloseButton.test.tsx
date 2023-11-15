@@ -11,11 +11,11 @@ jest.mock('react-router-dom', () => ({
   useLocation: () => mockUseLocation,
 }));
 
-describe('CloseButton component', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
+describe('CloseButton component', () => {
   test('clicking the close button hides the component', () => {
     const { getByRole } = render(<CloseButton />);
 

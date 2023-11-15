@@ -1,28 +1,33 @@
-import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
-import ErrorBoundaryLayout from '../components/ErrorBoundaryLayout';
 import Details from '../components/Details';
 import { Routes } from './routes';
 import NotFoundPage from '../pages/NotFoundPage';
+import { detailsLoader } from './loaders/detailsLoader';
+import MainPage from '../pages/MainPage';
+import { createBrowserRouter } from 'react-router-dom';
 
-const router = createBrowserRouter([
+export const routesConfig = [
   {
-    element: <ErrorBoundaryLayout />,
-    errorElement: <NotFoundPage />,
+    path: Routes.index,
+    element: <App />,
     children: [
       {
         path: Routes.index,
-        element: <App />,
-
+        element: <MainPage />,
         children: [
           {
             path: Routes.release,
-            children: [{ path: Routes.id, element: <Details /> }],
+            children: [
+              { path: Routes.id, element: <Details />, loader: detailsLoader },
+            ],
           },
         ],
       },
+      { path: '*', element: <NotFoundPage /> },
     ],
   },
-]);
+];
+
+const router = createBrowserRouter(routesConfig);
 
 export default router;

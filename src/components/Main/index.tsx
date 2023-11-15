@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import Wrapper from '../Wrapper';
@@ -9,35 +8,30 @@ import Dropdown from '../Dropdown';
 import CloseButton from '../CloseButton';
 import { Routes } from '../../router/routes';
 import { useAppContext } from '../../context';
-import { LOCAL_STORAGE_IS_OPEN } from '../../constants';
-import { setIsOpen } from '../../context/actions';
 import styles from './Main.module.scss';
+import EmptyState from '../EmptyState';
 
 const Main = () => {
-  const { state, dispatch } = useAppContext();
-  const { isOpen, isLoading } = state;
+  const { state } = useAppContext();
+  const { isLoading, releases } = state;
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const { search } = location;
 
-  useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_IS_OPEN, JSON.stringify(isOpen));
-    if (!id) {
-      setIsOpen(dispatch, false);
-    }
-  }, [isOpen, id]);
-
   const handleLeftSectionClick = () => {
-    if (isOpen) {
-      setIsOpen(dispatch, false);
+    if (id) {
       navigate(`${Routes.index}${search}`);
     }
   };
 
   const rightSectionClasses = classNames(styles.rightSection, {
-    [styles.hidden]: !isOpen,
+    [styles.hidden]: !id,
   });
+
+  if (!(isLoading || releases.length)) {
+    return <EmptyState />;
+  }
 
   return (
     <main className={styles.main}>

@@ -9,6 +9,12 @@ export interface Release {
   genre: string[];
 }
 
+export interface ReleaseItem {
+  artists: Array<{ name: string }>;
+  title: string;
+  tracklist: Array<{ title: string; duration: string }>;
+}
+
 export interface PaginationData {
   page: number;
   per_page: number;

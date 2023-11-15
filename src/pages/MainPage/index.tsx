@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import Header from '../../components/Header';
 import Main from '../../components/Main';
-import EmptyState from '../../components/EmptyState';
 import { fetchReleases } from '../../services/apiService';
 import { useAppContext } from '../../context';
 import {
@@ -17,7 +15,7 @@ import styles from './MainPage.module.scss';
 const MainPage = () => {
   const [, setSearchParams] = useSearchParams();
   const { state, dispatch } = useAppContext();
-  const { searchTerm, currentPage, perPage, isLoading, releases } = state;
+  const { searchTerm, currentPage, perPage } = state;
 
   const getReleases = async () => {
     setIsLoading(dispatch, true);
@@ -52,8 +50,7 @@ const MainPage = () => {
 
   return (
     <div className={styles.container}>
-      <Header />
-      {!(isLoading || releases.length) ? <EmptyState /> : <Main />}
+      <Main />
     </div>
   );
 };
