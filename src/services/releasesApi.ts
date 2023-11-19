@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { createQuery } from '../helpers/createQuery';
-import { ReleasesResponse } from '../types';
+import { ReleaseItem, ReleasesResponse } from '../types';
 
-interface QueryParams {
+interface ReleasesQueryParams {
   searchTerm: string;
   currentPage: number;
   perPage: number;
@@ -10,23 +10,25 @@ interface QueryParams {
 
 export const releasesApi = createApi({
   reducerPath: 'releasesApi',
-  keepUnusedDataFor: process.env.NODE_ENV === 'test' ? 0 : 60,
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.discogs.com/database/search',
+    baseUrl: 'https://api.discogs.com',
     prepareHeaders: (headers) => {
       headers.set('Content-Type', 'application/json');
       return headers;
     },
   }),
   endpoints: (builder) => ({
-    getReleases: builder.query<ReleasesResponse, QueryParams>({
+    getReleases: builder.query<ReleasesResponse, ReleasesQueryParams>({
       query: (arg) => {
         const { searchTerm, currentPage, perPage } = arg;
         const queryParams = createQuery(searchTerm, currentPage, perPage);
-        return `?${queryParams}`;
+        return `/database/search?${queryParams}`;
       },
+    }),
+    getRelease: builder.query<ReleaseItem, string>({
+      query: (id) => `/releases/${id}`,
     }),
   }),
 });
 
-export const { useGetReleasesQuery } = releasesApi;
+export const { useGetReleaseQuery, useGetReleasesQuery } = releasesApi;
