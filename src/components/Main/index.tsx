@@ -1,10 +1,4 @@
-import {
-  Outlet,
-  useLocation,
-  useNavigate,
-  useParams,
-  // useSearchParams,
-} from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import Wrapper from '../Wrapper';
 import Loader from '../Loader';

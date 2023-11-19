@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useGetReleaseQuery } from '../../services/releaseApi';
+import { useGetReleaseQuery } from '../../services/releasesApi';
 import Loader from '../Loader';
 import styles from './Details.module.scss';
 
