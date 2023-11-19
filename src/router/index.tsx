@@ -2,7 +2,6 @@ import App from '../App';
 import Details from '../components/Details';
 import { Routes } from './routes';
 import NotFoundPage from '../pages/NotFoundPage';
-import { detailsLoader } from './loaders/detailsLoader';
 import MainPage from '../pages/MainPage';
 import { createBrowserRouter } from 'react-router-dom';
 
@@ -17,9 +16,7 @@ export const routesConfig = [
         children: [
           {
             path: Routes.release,
-            children: [
-              { path: Routes.id, element: <Details />, loader: detailsLoader },
-            ],
+            children: [{ path: Routes.id, element: <Details /> }],
           },
         ],
       },
