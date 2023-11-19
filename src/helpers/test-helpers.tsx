@@ -1,4 +1,4 @@
-import { ReactElement, PropsWithChildren } from 'react';
+import React, { ReactElement, PropsWithChildren } from 'react';
 import { render } from '@testing-library/react';
 import type { RenderOptions } from '@testing-library/react';
 import { configureStore } from '@reduxjs/toolkit';
@@ -9,7 +9,6 @@ import { searchSlice } from '../store/slices/search';
 import { releaseSlice } from '../store/slices/release';
 import { releasesSlice } from '../store/slices/releases';
 import { paginationSlice } from '../store/slices/pagination';
-import { releaseApi } from '../services/releaseApi';
 import { releasesApi } from '../services/releasesApi';
 
 interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
@@ -22,7 +21,6 @@ const reducer = {
   release: releaseSlice.reducer,
   releases: releasesSlice.reducer,
   pagination: paginationSlice.reducer,
-  [releaseApi.reducerPath]: releaseApi.reducer,
   [releasesApi.reducerPath]: releasesApi.reducer,
 };
 
@@ -34,10 +32,7 @@ export function renderWithProviders(
       reducer,
       preloadedState,
       middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(
-          releaseApi.middleware,
-          releasesApi.middleware
-        ),
+        getDefaultMiddleware().concat(releasesApi.middleware),
     }),
     ...renderOptions
   }: ExtendedRenderOptions = {}
