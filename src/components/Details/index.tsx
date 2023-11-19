@@ -1,11 +1,23 @@
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks/storeHooks';
 import { useGetReleaseQuery } from '../../services/releasesApi';
 import Loader from '../Loader';
+import { setIsFetching, setRelease } from '../../store/slices/release';
 import styles from './Details.module.scss';
 
 const Details = () => {
   const { id } = useParams();
+  const dispatch = useAppDispatch();
   const { data, isFetching } = useGetReleaseQuery(id || '');
+
+  useEffect(() => {
+    dispatch(setIsFetching(isFetching));
+
+    if (data && !isFetching) {
+      dispatch(setRelease(data));
+    }
+  }, [data, isFetching]);
 
   if (isFetching) {
     return <Loader />;
