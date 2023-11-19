@@ -1,7 +1,7 @@
 import { http, HttpResponse, delay } from 'msw';
-import { PaginationData, Release } from '../types';
+import { PaginationData, Release, ReleaseItem } from '../types';
 
-const mockRelease = {
+const mockRelease: ReleaseItem = {
   artists: [{ name: 'Artist 1' }],
   title: 'Album Title',
   tracklist: [
