@@ -1,7 +1,7 @@
 import { waitFor } from '@testing-library/react';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import Details from '../components/Details';
 import { renderWithProviders } from '../helpers/test-helpers';
-import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 describe('Tests for the Detailed Card component:', () => {
   beforeEach(() => {
@@ -39,17 +39,4 @@ describe('Tests for the Detailed Card component:', () => {
       expect(getByText('4:15')).toBeInTheDocument();
     });
   });
-
-  // test('Make sure the loading indicator is displayed while fetching data', async () => {
-  //   FAKE_STATE.state = 'loading';
-
-  //   const { findByTestId } = render(
-  //     <Provider store={store}>
-  //       <RouterProvider router={router} />
-  //     </Provider>
-  //   );
-  //   const loader = await findByTestId('loader');
-
-  //   expect(loader).toBeInTheDocument();
-  // });
 });

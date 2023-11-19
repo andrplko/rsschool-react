@@ -1,6 +1,6 @@
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
-import { routesConfig } from '../router';
 import { renderWithProviders } from '../helpers/test-helpers';
+import { routesConfig } from '../router';
 
 describe('Tests for the 404 Page component', () => {
   test('Ensure that the 404 page is displayed when navigating to an invalid route', () => {

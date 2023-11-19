@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import Dropdown from '../components/Dropdown';
 import { renderWithProviders } from '../helpers/test-helpers';
-import { MemoryRouter } from 'react-router-dom';
 
 const dropdownValues = [4, 6, 8, 10, 12];
 const defaultSelectedText = 'Select value';

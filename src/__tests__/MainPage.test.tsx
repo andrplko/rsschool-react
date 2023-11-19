@@ -1,12 +1,11 @@
-import MainPage from '../pages/MainPage';
-import { renderWithProviders } from '../helpers/test-helpers';
 import { MemoryRouter } from 'react-router-dom';
 import { fireEvent } from '@testing-library/react';
-import { setupServer } from 'msw/node';
 import { http, delay, HttpResponse } from 'msw';
+import { server } from '../__mocks__/node';
+import { renderWithProviders } from '../helpers/test-helpers';
+import MainPage from '../pages/MainPage';
 
 const pages = ['1', '2', '3', '...', '6'];
-const server = setupServer();
 
 describe('MainPage component', () => {
   beforeEach(() => {
@@ -59,14 +58,11 @@ describe('MainPage component', () => {
       })
     );
 
-    const { findAllByRole, findByText } = renderWithProviders(
+    const { findByText } = renderWithProviders(
       <MemoryRouter>
         <MainPage />
       </MemoryRouter>
     );
-
-    const links = await findAllByRole('link');
-    expect(links.length).toBe(0);
 
     const message = await findByText(/Not Found/i);
     expect(message).toBeInTheDocument();

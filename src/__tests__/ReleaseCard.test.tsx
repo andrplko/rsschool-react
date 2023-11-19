@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import { Release } from '../types';
 import ReleaseCard from '../components/ReleaseCard';
+import { Release } from '../types';
 
 const release: Release = {
   id: 1,
