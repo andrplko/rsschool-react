@@ -1,99 +1,88 @@
-import { fireEvent, render, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import MainPage from '../pages/MainPage';
-import { Release } from '../types';
-import { fetchReleases } from '../services/apiService';
-import { setCurrentPage } from '../context/actions';
+import { renderWithProviders } from '../helpers/test-helpers';
+import { MemoryRouter } from 'react-router-dom';
+import { fireEvent } from '@testing-library/react';
+import { setupServer } from 'msw/node';
+import { http, delay, HttpResponse } from 'msw';
 
-const mockReleases: Release[] = [
-  {
-    id: 1,
-    title: 'Mac Demarco 1',
-    cover_image: 'release.jpg',
-    year: '1995',
-    style: ['Indie-Rock', 'Lo-fi'],
-    genre: ['Rock'],
-  },
-  {
-    id: 2,
-    title: 'Mac Demarco 2',
-    cover_image: 'release.jpg',
-    year: '1998',
-    style: ['Indie-Rock'],
-    genre: ['Rock'],
-  },
-];
-
-const mockContextValue = {
-  state: {
-    searchTerm: 'test',
-    currentPage: 1,
-    perPage: 1,
-    totalPages: 3,
-    isLoading: false,
-    releases: mockReleases,
-  },
-  dispatch: jest.fn(),
-};
-
-jest.mock('../context', () => ({
-  ...jest.requireActual('../context'),
-  useAppContext: jest.fn(() => mockContextValue),
-}));
-
-jest.mock('../context/actions', () => ({
-  setCurrentPage: jest.fn(),
-  setIsLoading: jest.fn(),
-  setReleases: jest.fn(),
-}));
-
-jest.mock('../services/apiService', () => ({
-  fetchReleases: jest.fn(() =>
-    Promise.resolve({
-      ok: true,
-      status: 200,
-      json: () => ({
-        results: mockReleases,
-      }),
-    })
-  ),
-}));
+const pages = ['1', '2', '3', '...', '6'];
+const server = setupServer();
 
 describe('MainPage component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('renders releases after fetching data', async () => {
-    const { getByText } = render(
+  test('renders pagination buttons correctly', async () => {
+    const { findByText } = renderWithProviders(
       <MemoryRouter>
         <MainPage />
       </MemoryRouter>
     );
 
-    await waitFor(() => {
-      expect(getByText('Mac Demarco 1')).toBeInTheDocument();
-      expect(getByText('Mac Demarco 2')).toBeInTheDocument();
-    });
+    const prevButton = await findByText('Prev');
+    const nextButton = await findByText('Next');
 
-    expect(fetchReleases).toHaveBeenCalledTimes(1);
-    expect(fetchReleases).toHaveBeenCalledWith('test', 1, 1);
-  });
-
-  it('Ensure the component updates URL query parameter when page changes', async () => {
-    const { getByText } = render(
-      <MemoryRouter>
-        <MainPage />
-      </MemoryRouter>
-    );
-    const nextButton = getByText('Next');
-
+    expect(prevButton).toBeInTheDocument();
     expect(nextButton).toBeInTheDocument();
 
-    fireEvent.click(nextButton);
+    for (let i = 0; i < pages.length; i++) {
+      const pageButton = await findByText(pages[i]);
+      expect(pageButton).toBeInTheDocument();
+    }
+  });
 
-    await waitFor(() => {
-      expect(setCurrentPage).toHaveBeenCalledWith(expect.any(Function), 2);
-    });
+  test('Verify that the component renders the specified number of cards', async () => {
+    const { findAllByRole } = renderWithProviders(
+      <MemoryRouter>
+        <MainPage />
+      </MemoryRouter>
+    );
+
+    const cards = await findAllByRole('link');
+    expect(cards.length).toBe(2);
+  });
+
+  test('Check that an appropriate message is displayed if no cards are present', async () => {
+    server.use(
+      http.get('https://api.discogs.com/database/search', async () => {
+        await delay(200);
+        return HttpResponse.json(
+          {
+            results: [],
+            pagination: {},
+          },
+          {
+            status: 200,
+          }
+        );
+      })
+    );
+
+    const { findAllByRole, findByText } = renderWithProviders(
+      <MemoryRouter>
+        <MainPage />
+      </MemoryRouter>
+    );
+
+    const links = await findAllByRole('link');
+    expect(links.length).toBe(0);
+
+    const message = await findByText(/Not Found/i);
+    expect(message).toBeInTheDocument();
+  });
+
+  test('Validate that clicking on a card opens a detailed card component', async () => {
+    const { findAllByRole, findAllByText } = renderWithProviders(
+      <MemoryRouter>
+        <MainPage />
+      </MemoryRouter>
+    );
+
+    const links = await findAllByRole('link');
+    fireEvent.click(links[0]);
+
+    const detailedCardTitle = await findAllByText(/Mac Demarco 1/i);
+    expect(detailedCardTitle[0]).toBeInTheDocument();
   });
 });
