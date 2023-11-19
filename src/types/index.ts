@@ -1,5 +1,3 @@
-import { ReactNode } from 'react';
-
 export interface Release {
   id: number;
   title: string;
@@ -25,8 +23,4 @@ export interface PaginationData {
 export type ReleasesResponse = {
   results: Release[];
   pagination: PaginationData;
-};
-
-export type ChildrenProps = {
-  children?: ReactNode;
 };
