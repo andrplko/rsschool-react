@@ -1,52 +1,35 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Main from '../../components/Main';
-import { fetchReleases } from '../../services/apiService';
-import { useAppContext } from '../../context';
-import {
-  setIsLoading,
-  setCurrentPage,
-  setPerPage,
-  setTotalPages,
-  setReleases,
-} from '../../context/actions';
+import { useGetReleasesQuery } from '../../services/releasesApi';
+import { useAppDispatch, useAppSelector } from '../../hooks/storeHooks';
+import { setIsFetching, setReleases } from '../../store/slices/releases';
+import { DEFAULT_CURRENT_PAGE, DEFAULT_PER_PAGE } from '../../constants';
+import { setPaginationData } from '../../store/slices/pagination';
 import styles from './MainPage.module.scss';
 
 const MainPage = () => {
-  const [, setSearchParams] = useSearchParams();
-  const { state, dispatch } = useAppContext();
-  const { searchTerm, currentPage, perPage } = state;
+  const dispatch = useAppDispatch();
+  const [searchParams] = useSearchParams();
+  const { searchTerm } = useAppSelector((state) => state.search);
 
-  const getReleases = async () => {
-    setIsLoading(dispatch, true);
+  const currentPage = searchParams.get('page');
+  const perPage = searchParams.get('per_page');
 
-    try {
-      const { results, pagination } = await fetchReleases(
-        searchTerm,
-        currentPage,
-        perPage
-      );
-
-      setReleases(dispatch, results || []);
-      setCurrentPage(dispatch, pagination.page);
-      setPerPage(dispatch, pagination.per_page);
-      setTotalPages(dispatch, pagination.pages);
-
-      setSearchParams({
-        q: searchTerm,
-        page: String(pagination.page),
-        per_page: String(pagination.per_page),
-      });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(dispatch, false);
-    }
-  };
+  const { data, isFetching } = useGetReleasesQuery({
+    searchTerm: searchTerm || '',
+    currentPage: currentPage ? +currentPage : DEFAULT_CURRENT_PAGE,
+    perPage: perPage ? +perPage : DEFAULT_PER_PAGE,
+  });
 
   useEffect(() => {
-    getReleases();
-  }, [searchTerm, currentPage, perPage]);
+    dispatch(setIsFetching(isFetching));
+
+    if (data && !isFetching) {
+      dispatch(setReleases(data.results));
+      dispatch(setPaginationData(data.pagination));
+    }
+  }, [data, isFetching]);
 
   return (
     <div className={styles.container}>
