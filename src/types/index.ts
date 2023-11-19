@@ -19,7 +19,7 @@ export interface PaginationData {
   page: number;
   per_page: number;
   pages: number;
-  items: number;
+  items?: number;
 }
 
 export type ReleasesResponse = {
