@@ -8,7 +8,6 @@ import searchSlice from './slices/search';
 import releaseSlice from './slices/release';
 import releasesSlice from './slices/releases';
 import paginationSlice from './slices/pagination';
-import { releaseApi } from '../services/releaseApi';
 import { releasesApi } from '../services/releasesApi';
 
 const reducers = {
@@ -16,7 +15,6 @@ const reducers = {
   release: releaseSlice,
   releases: releasesSlice,
   pagination: paginationSlice,
-  [releaseApi.reducerPath]: releaseApi.reducer,
   [releasesApi.reducerPath]: releasesApi.reducer,
 };
 
@@ -29,10 +27,7 @@ export const setupStore = (preloadedState?: PreloadedState<RootState>) =>
     reducer: rootReducer,
     preloadedState,
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(
-        releaseApi.middleware,
-        releasesApi.middleware
-      ),
+      getDefaultMiddleware().concat(releasesApi.middleware),
   });
 
 const store = setupStore();
