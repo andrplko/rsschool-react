@@ -1,14 +1,13 @@
-import { useLoaderData, useNavigation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useGetReleaseQuery } from '../../services/releaseApi';
 import Loader from '../Loader';
-import { ReleaseItem } from '../../types';
 import styles from './Details.module.scss';
 
 const Details = () => {
-  const data = useLoaderData() as ReleaseItem;
-  const { state } = useNavigation();
-  const isLoading = state === 'loading';
+  const { id } = useParams();
+  const { data, isFetching } = useGetReleaseQuery(id || '');
 
-  if (isLoading) {
+  if (isFetching) {
     return <Loader />;
   }
 

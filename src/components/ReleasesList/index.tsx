@@ -2,18 +2,17 @@ import { Link, useLocation } from 'react-router-dom';
 import { Release } from '../../types';
 import ReleaseCard from '../ReleaseCard';
 import { Routes } from '../../router/routes';
-import { useAppContext } from '../../context';
+import { useAppSelector } from '../../hooks/storeHooks';
 import styles from './ReleasesList.module.scss';
 
 const ReleasesList = () => {
-  const { state } = useAppContext();
-  const { releases } = state;
+  const { results } = useAppSelector((state) => state.releases);
   const location = useLocation();
   const { search } = location;
 
   return (
     <div className={styles.container}>
-      {releases?.map((release: Release) => (
+      {results?.map((release: Release) => (
         <Link
           key={release.id}
           to={{

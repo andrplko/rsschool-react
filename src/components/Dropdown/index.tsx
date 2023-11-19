@@ -1,25 +1,28 @@
 import { useState } from 'react';
 import classNames from 'classnames';
-import { useAppContext } from '../../context';
-import { setCurrentPage, setPerPage } from '../../context/actions';
-import { DEFAULT_CURRENT_PAGE } from '../../constants';
+import { DEFAULT_CURRENT_PAGE, DEFAULT_PER_PAGE } from '../../constants';
+import { useSearchParams } from 'react-router-dom';
 import styles from './Dropdown.module.scss';
 
 const dropdownValues: number[] = [4, 6, 8, 10, 12];
 
 const Dropdown = () => {
-  const { state, dispatch } = useAppContext();
-  const { perPage } = state;
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState('Select value');
-  const [selectedItem, setSelectedItem] = useState(perPage);
+  const perPage = searchParams.get('per_page');
+  const [selectedItem, setSelectedItem] = useState(
+    perPage ? +perPage : DEFAULT_PER_PAGE
+  );
   const toggleOpen = () => setIsOpen(!isOpen);
 
   const handleItemClick = (value: number) => {
     setSelected(String(value));
     setSelectedItem(value);
-    setPerPage(dispatch, value);
-    setCurrentPage(dispatch, DEFAULT_CURRENT_PAGE);
+    setSearchParams({
+      page: String(DEFAULT_CURRENT_PAGE),
+      per_page: String(value),
+    });
   };
 
   const dropdownHeadClassNames = classNames(styles.dropdownHead, {

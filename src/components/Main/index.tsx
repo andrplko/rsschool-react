@@ -1,4 +1,10 @@
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
+import {
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+  // useSearchParams,
+} from 'react-router-dom';
 import classNames from 'classnames';
 import Wrapper from '../Wrapper';
 import Loader from '../Loader';
@@ -7,13 +13,12 @@ import Pagination from '../Pagination';
 import Dropdown from '../Dropdown';
 import CloseButton from '../CloseButton';
 import { Routes } from '../../router/routes';
-import { useAppContext } from '../../context';
-import styles from './Main.module.scss';
 import EmptyState from '../EmptyState';
+import { useAppSelector } from '../../hooks/storeHooks';
+import styles from './Main.module.scss';
 
 const Main = () => {
-  const { state } = useAppContext();
-  const { isLoading, releases } = state;
+  const { results, isFetching } = useAppSelector((state) => state.releases);
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -29,7 +34,7 @@ const Main = () => {
     [styles.hidden]: !id,
   });
 
-  if (!(isLoading || releases.length)) {
+  if (!(isFetching || results.length)) {
     return <EmptyState />;
   }
 
@@ -42,7 +47,7 @@ const Main = () => {
             className={styles.leftSection}
           >
             <Dropdown />
-            {isLoading ? (
+            {isFetching ? (
               <Loader />
             ) : (
               <div className={styles.wrapper}>

@@ -1,14 +1,15 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { LOCAL_STORAGE_SEARCH_TERM } from '../../constants';
-import { useAppContext } from '../../context';
-import { setSearchTerm } from '../../context/actions';
+import { useSearchParams } from 'react-router-dom';
+import { setSearchTerm } from '../../store/slices/search';
+import { useAppDispatch, useAppSelector } from '../../hooks/storeHooks';
+import { DEFAULT_CURRENT_PAGE } from '../../constants';
 import styles from './SearchBar.module.scss';
 
 const SearchBar = () => {
-  const { dispatch } = useAppContext();
-  const [searchValue, setSearchValue] = useState(
-    localStorage.getItem(LOCAL_STORAGE_SEARCH_TERM) || ''
-  );
+  const dispatch = useAppDispatch();
+  const [, setSearchParams] = useSearchParams();
+  const { per_page } = useAppSelector((state) => state.pagination);
+  const [searchValue, setSearchValue] = useState('');
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -17,8 +18,11 @@ const SearchBar = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSearchTerm(dispatch, searchValue);
-    localStorage.setItem(LOCAL_STORAGE_SEARCH_TERM, searchValue);
+    dispatch(setSearchTerm(searchValue));
+    setSearchParams({
+      page: String(DEFAULT_CURRENT_PAGE),
+      per_page: String(per_page),
+    });
   };
 
   return (
