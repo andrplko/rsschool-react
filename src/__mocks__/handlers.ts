@@ -1,7 +1,7 @@
 import { http, HttpResponse, delay } from 'msw';
 import { PaginationData, Release } from '../types';
 
-const FAKE_RELEASE_DATA = {
+const mockRelease = {
   artists: [{ name: 'Artist 1' }],
   title: 'Album Title',
   tracklist: [
@@ -39,7 +39,7 @@ const mockReleases: Release[] = [
 export const handlers = [
   http.get('https://api.discogs.com/releases/1', async () => {
     await delay(200);
-    return HttpResponse.json(FAKE_RELEASE_DATA, {
+    return HttpResponse.json(mockRelease, {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
