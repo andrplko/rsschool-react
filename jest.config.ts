@@ -70,7 +70,7 @@ const config: Config = {
   // globals: {},
 
   // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
-  // maxWorkers: "50%",
+  // maxWorkers: 2,
 
   // An array of directory names to be searched recursively up from the requiring module's location
   moduleDirectories: ['node_modules', 'src'],
@@ -127,7 +127,7 @@ const config: Config = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  // setupFiles: [],
+  setupFiles: ['./jest.polyfills.ts'],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   setupFilesAfterEnv: ['./setup-jest.ts'],
@@ -142,7 +142,10 @@ const config: Config = {
   testEnvironment: 'jsdom',
 
   // Options that will be passed to the testEnvironment
-  // testEnvironmentOptions: {},
+  testEnvironmentOptions: {
+    customExportConditions: [''],
+    runInBand: true,
+  },
 
   // Adds a location field to test results
   // testLocationInResults: false,
