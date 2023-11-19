@@ -3,7 +3,7 @@
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "types": ["@testing-library/jest-dom", "@types/react-redux"],
+    "types": ["@testing-library/jest-dom"],
     "module": "ESNext",
 
     "skipLibCheck": true,
@@ -24,6 +24,6 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true
   },
-  "include": ["src", "jest.config.ts", "setup-jest.ts", "vite.config.ts"],
+  "include": ["src", "jest.config.ts", "jest.setup.ts", "vite.config.ts", "src/__tests__", "src/__mocks__"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

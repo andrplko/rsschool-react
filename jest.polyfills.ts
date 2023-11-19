@@ -5,8 +5,8 @@ Object.defineProperties(globalThis, {
   TextEncoder: { value: TextEncoder },
 });
 
-import { Blob, File } from 'node:buffer';
-import { fetch, Headers, FormData, Request, Response } from 'undici';
+const { Blob } = require('node:buffer');
+const { fetch, Headers, FormData, Request, Response } = require('undici');
 
 Object.defineProperties(globalThis, {
   fetch: { value: fetch, writable: true },

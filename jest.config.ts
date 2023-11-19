@@ -127,10 +127,10 @@ const config: Config = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  setupFiles: ['./jest.polyfills.ts'],
+  setupFiles: ['<rootDir>/jest.polyfills.ts'],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  setupFilesAfterEnv: ['./setup-jest.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,
@@ -144,7 +144,6 @@ const config: Config = {
   // Options that will be passed to the testEnvironment
   testEnvironmentOptions: {
     customExportConditions: [''],
-    runInBand: true,
   },
 
   // Adds a location field to test results
@@ -172,21 +171,15 @@ const config: Config = {
 
   // A map from regular expressions to paths to transformers
   transform: {
-    '^.+\\.tsx?$': [
-      'ts-jest',
+    '^.+\\.(t|j)sx?$': [
+      '@swc/jest',
       {
-        diagnostics: {
-          ignoreCodes: [1343],
-        },
-        astTransformers: {
-          before: [
-            {
-              path: 'node_modules/ts-jest-mock-import-meta',
-              options: {
-                metaObjectReplacement: { url: 'https://www.url.com' },
-              },
+        jsc: {
+          transform: {
+            react: {
+              runtime: 'automatic',
             },
-          ],
+          },
         },
       },
     ],
