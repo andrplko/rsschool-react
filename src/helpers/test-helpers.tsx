@@ -1,4 +1,4 @@
-import React, { ReactElement, PropsWithChildren } from 'react';
+import { ReactElement, PropsWithChildren } from 'react';
 import { render } from '@testing-library/react';
 import type { RenderOptions } from '@testing-library/react';
 import { configureStore } from '@reduxjs/toolkit';
