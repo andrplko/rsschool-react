@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import Home from '@/pages';
+import Home, { getServerSideProps } from '@/pages';
 import {
   mockPaginationData,
   mockRelease,
@@ -7,6 +7,8 @@ import {
 } from '@/__mocks__/mockData';
 import updateQueryParams from '@/utils/updateQueryParams';
 import { useRouter } from 'next/router';
+import removeQueryParams from '@/utils/removeQueryParams';
+import { assertHasProps, gsspCtx } from '../../jest.setup';
 
 const pages = ['1', '2', '3', '...', '6'];
 
@@ -16,7 +18,7 @@ jest.mock('next/router', () => {
     replace: jest.fn(),
     route: '/',
     pathname: '/',
-    query: {},
+    query: { id: '8100827' },
     asPath: '',
   };
   return {
@@ -25,29 +27,9 @@ jest.mock('next/router', () => {
 });
 
 jest.mock('../utils/updateQueryParams', () => jest.fn());
+jest.mock('../utils/removeQueryParams', () => jest.fn());
 
 describe('MainPage component', () => {
-  test('Validate that clicking on a card opens a detailed card component', async () => {
-    const router = useRouter();
-    render(
-      <Home
-        release={mockRelease}
-        releases={{
-          results: mockTransformedReleases,
-          pagination: mockPaginationData,
-        }}
-      />
-    );
-
-    const card = screen.getAllByTestId('card');
-    fireEvent.click(card[0]);
-
-    expect(updateQueryParams).toHaveBeenCalledTimes(1);
-    expect(updateQueryParams).toHaveBeenCalledWith(router, {
-      id: '8100827',
-    });
-  });
-
   test('renders prev pagination button correctly', async () => {
     const router = useRouter();
     render(
@@ -145,5 +127,37 @@ describe('MainPage component', () => {
 
     const message = await screen.findByText(/No results/i);
     expect(message).toBeInTheDocument();
+  });
+
+  test('check if the details component closes when clicking on the left section', () => {
+    const router = useRouter();
+    render(
+      <Home
+        release={mockRelease}
+        releases={{
+          results: mockTransformedReleases,
+          pagination: mockPaginationData,
+        }}
+      />
+    );
+
+    const leftSection = screen.getByTestId('left-section');
+
+    fireEvent.click(leftSection);
+
+    expect(removeQueryParams).toHaveBeenCalledTimes(1);
+    expect(removeQueryParams).toHaveBeenCalledWith(router, 'id');
+  });
+
+  test('If the data acquisition is successful, the title will be displayed.', async () => {
+    const res = await getServerSideProps(
+      gsspCtx({
+        query: { q: 'nirvana', page: '2', per_page: '6', id: '8100827' },
+      })
+    );
+    assertHasProps(res);
+    render(<Home {...res.props} />);
+    expect(screen.getByTestId('left-section')).toBeInTheDocument();
+    expect(screen.getByTestId('right-section')).toBeInTheDocument();
   });
 });

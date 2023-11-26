@@ -59,7 +59,7 @@ describe('Release Card component', () => {
     expect(stylesElement).toBeInTheDocument();
   });
 
-  test('after card click router query is updated', () => {
+  test('Validate that clicking on a card opens a detailed card component', () => {
     render(<ReleaseCard release={release} />);
     const router = useRouter();
 
