@@ -1,0 +1,20 @@
+.container {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(2, 450px);
+  gap: 1rem;
+  margin: 1rem 0;
+
+  @media screen and (max-width: 1024px) {
+    grid-template-columns: repeat(1, 450px);
+  }
+
+  @media screen and (max-width: 648px) {
+    grid-template-columns: repeat(1, 232px);
+  }
+}
+
+.link {
+  color: $black-color;
+  text-decoration: none;
+}
