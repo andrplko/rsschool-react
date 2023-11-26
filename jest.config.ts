@@ -11,6 +11,8 @@ const config: import('jest').Config = {
   coveragePathIgnorePatterns: [
     './src/utils/fonts.ts',
     './src/constants/index.ts',
+    './src/pages/_app.tsx',
+    './src/pages/_document.tsx',
   ],
   moduleDirectories: ['node_modules', 'src'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
