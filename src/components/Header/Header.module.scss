@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+  align-items: center;
+
+  @media screen and (max-width: 648px) {
+    flex-direction: column;
+    flex: 1;
+  }
+}
