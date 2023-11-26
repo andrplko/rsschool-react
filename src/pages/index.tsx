@@ -43,6 +43,7 @@ const Home = ({ release, releases }: HomeProps) => {
           <section
             onClick={handleLeftSectionClick}
             className={styles.leftSection}
+            data-testid="left-section"
           >
             <Dropdown perPage={pagination.per_page} />
             <div className={styles.wrapper}>
@@ -55,7 +56,10 @@ const Home = ({ release, releases }: HomeProps) => {
             </div>
           </section>
           {id && (
-            <section className={styles.rightSection}>
+            <section
+              className={styles.rightSection}
+              data-testid="right-section"
+            >
               <CloseButton />
               <Details release={release} />
             </section>
@@ -68,6 +72,7 @@ const Home = ({ release, releases }: HomeProps) => {
 
 export default Home;
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) => async (context) => {
     const { query } = context;
