@@ -1,0 +1,16 @@
+.container {
+  display: flex;
+  align-items: center;
+  column-gap: 0.5rem;
+  max-width: max-content;
+  cursor: pointer;
+}
+
+.input {
+  cursor: pointer;
+}
+
+.label {
+  user-select: none;
+  cursor: pointer;
+}

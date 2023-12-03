@@ -1,0 +1,29 @@
+.button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px 0;
+  text-align: center;
+  color: $white-color;
+  border-radius: $border-radius;
+  background-color: $blue-color;
+  appearance: none;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+
+  &:hover {
+    background-color: $dark-blue-color;
+  }
+
+  &:active {
+    background-color: $dark-blue-color;
+    transform: scale(1.02);
+  }
+
+  &:disabled {
+    background-color: $grey-color;
+    transform: none;
+    cursor: not-allowed;
+  }
+}
