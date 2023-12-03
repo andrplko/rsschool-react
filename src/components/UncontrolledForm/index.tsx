@@ -1,4 +1,4 @@
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ZodError } from 'zod';
 import Input from '../../UI/Input';
@@ -9,7 +9,10 @@ import Button from '../../UI/Button';
 import { AutoComplete } from '../../UI/AutoComplete';
 import { useAppDispatch } from '../../store';
 import { setUncontrolledFormData } from '../../store/slices/UncontrolledForm';
-import transformFormData from '../../utils/transformFormData';
+import {
+  transformDataWithConvertedPicture,
+  transformUncontrolledFormData,
+} from '../../utils/transformFormData';
 import { Routes } from '../../router/routes';
 import validationSchema from '../../utils/validationSchema';
 import styles from './UncontrolledForm.module.scss';
@@ -18,7 +21,7 @@ const UncontrolledForm = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const passwordRef = useRef<HTMLInputElement | null>(null);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const errorsRef = useRef<Record<string, string>>({});
 
   const handleOneLevelZodError = ({ issues }: ZodError<unknown>) => {
     return issues.reduce((acc: Record<string, string>, cur) => {
@@ -30,21 +33,21 @@ const UncontrolledForm = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const transformedData = await transformFormData(formData);
-    if (passwordRef.current) {
-      passwordRef.current.value = transformedData.password;
-    }
-
+    const transformedData = await transformDataWithConvertedPicture(formData);
     try {
-      validationSchema.parse(transformedData);
+      if (passwordRef.current) {
+        passwordRef.current.value = transformedData.password;
+      }
+
+      validationSchema.parse(transformUncontrolledFormData(formData));
     } catch (error) {
       if (error instanceof ZodError) {
         const handledError = handleOneLevelZodError(error);
-        setErrors(handledError);
+        errorsRef.current = handledError;
       }
     }
 
-    if (Object.keys(errors).length) {
+    if (Object.keys(errorsRef).length === 0) {
       dispatch(setUncontrolledFormData(transformedData));
       navigate(Routes.Main);
     }
@@ -60,12 +63,18 @@ const UncontrolledForm = () => {
                 key={input.id}
                 ref={passwordRef}
                 passwordValue={passwordRef.current?.value}
-                error={errors[input.name]}
+                error={errorsRef.current[input.name]}
                 {...input}
               />
             );
           }
-          return <Input key={input.id} error={errors[input.name]} {...input} />;
+          return (
+            <Input
+              key={input.id}
+              error={errorsRef.current[input.name]}
+              {...input}
+            />
+          );
         })}
         <AutoComplete />
         <RadioButton
@@ -73,12 +82,20 @@ const UncontrolledForm = () => {
           name="gender"
           value="female"
           label="Female"
+          error={errorsRef.current['gender']}
           defaultChecked
         />
-        <RadioButton id="male" name="gender" value="male" label="Male" />
+        <RadioButton
+          id="male"
+          name="gender"
+          value="male"
+          label="Male"
+          error={errorsRef.current['gender']}
+        />
         <Checkbox
           id="accept_terms"
           name="accept_terms"
+          error={errorsRef.current['accept_terms']}
           label="I agree to the terms and conditions"
         />
         <Button type="submit">Submit</Button>
