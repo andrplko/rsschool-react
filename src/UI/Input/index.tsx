@@ -37,11 +37,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           className={styles.input}
         />
         {passwordValue && <PasswordStrengthChecker password={passwordValue} />}
-        {error && (
-          <p className={styles.error} role="alert">
-            {error}
-          </p>
-        )}
+        <p className={styles.error} role="alert">
+          {error && error}
+        </p>
       </div>
     );
   }
