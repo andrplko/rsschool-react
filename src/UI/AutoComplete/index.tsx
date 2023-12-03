@@ -11,10 +11,6 @@ export const AutoComplete = () => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleOpen = () => setIsOpen(!isOpen);
 
-  // const handleItemClick = (value: string) => {
-  //   inputRef.current = value;
-  // };
-
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     let suggestions: string[] = [];
@@ -38,15 +34,7 @@ export const AutoComplete = () => {
       {isOpen && (
         <div className={styles.dropdown}>
           {countries.map((value, index) => {
-            return (
-              <div
-                key={index}
-                // onClick={() => handleItemClick(value)}
-                // className={selectedItemClassNames(value)}
-              >
-                {value}
-              </div>
-            );
+            return <div key={index}>{value}</div>;
           })}
         </div>
       )}
