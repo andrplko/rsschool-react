@@ -4,7 +4,7 @@ import styles from './ReactHookFormPage.module.scss';
 const ReactHookFormPage = () => {
   return (
     <div className={styles.container}>
-      <h1>React Hook Form</h1>
+      <h2>React Hook Form</h2>
       <ReactHookForm />
     </div>
   );
