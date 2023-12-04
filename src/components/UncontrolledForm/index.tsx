@@ -22,7 +22,6 @@ const UncontrolledForm = () => {
   const navigate = useNavigate();
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const errorsRef = useRef<Record<string, string>>({});
-
   const handleOneLevelZodError = ({ issues }: ZodError<unknown>) => {
     return issues.reduce((acc: Record<string, string>, cur) => {
       acc[cur.path[0]] = cur.message;
@@ -34,11 +33,12 @@ const UncontrolledForm = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const transformedData = await transformDataWithConvertedPicture(formData);
-    try {
-      if (passwordRef.current) {
-        passwordRef.current.value = transformedData.password;
-      }
 
+    if (passwordRef.current) {
+      passwordRef.current.value = transformedData.password;
+    }
+
+    try {
       validationSchema.parse(transformUncontrolledFormData(formData));
     } catch (error) {
       if (error instanceof ZodError) {
@@ -47,7 +47,7 @@ const UncontrolledForm = () => {
       }
     }
 
-    if (Object.keys(errorsRef).length === 0) {
+    if (Object.keys(errorsRef.current).length === 0) {
       dispatch(setUncontrolledFormData(transformedData));
       navigate(Routes.Main);
     }
