@@ -15,11 +15,9 @@ const Input = ({ id, label, registration, error, ...props }: InputProps) => {
         {label}
         <input id={id} {...registration} {...props} className={styles.input} />
       </label>
-      {error?.message && (
-        <div role="alert" aria-label={error.message} className={styles.error}>
-          {error.message}
-        </div>
-      )}
+      <div role="alert" className={styles.error}>
+        {error?.message && error.message}
+      </div>
     </div>
   );
 };

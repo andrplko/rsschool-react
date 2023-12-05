@@ -52,14 +52,16 @@ const validationSchema = z
       .string({ required_error: 'Gender is required' })
       .min(1, { message: 'Please select a gender' }),
     accept_terms: z.union([
+      z.literal('on').transform(() => true),
       z
-        .boolean({ required_error: 'Accept terms is required' })
+        .literal(undefined)
+        .transform(() => false)
         .refine((value) => value, {
           message: 'You must accept terms and conditions',
         }),
       z
-        .string({ required_error: 'Accept terms is required' })
-        .refine((value) => value === 'on', {
+        .boolean({ required_error: 'Accept terms is required' })
+        .refine((value) => value, {
           message: 'You must accept terms and conditions',
         }),
     ]),

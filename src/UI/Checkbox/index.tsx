@@ -1,23 +1,29 @@
 import { InputHTMLAttributes } from 'react';
+import { UseFormRegisterReturn } from 'react-hook-form';
 import styles from './Checkbox.module.scss';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   error?: string;
+  registration?: Partial<UseFormRegisterReturn>;
 }
 
-const Checkbox = ({ id, label, error, ...props }: InputProps) => {
+const Checkbox = ({ id, label, registration, error, ...props }: InputProps) => {
   return (
     <div className={styles.container}>
-      <input id={id} type="checkbox" {...props} className={styles.input} />
       <label htmlFor={id} className={styles.label}>
+        <input
+          id={id}
+          type="checkbox"
+          {...registration}
+          {...props}
+          className={styles.input}
+        />
         {label}
       </label>
-      {error && (
-        <p className={styles.error} role="alert">
-          {error}
-        </p>
-      )}
+      <p className={styles.error} role="alert">
+        {error && error}
+      </p>
     </div>
   );
 };

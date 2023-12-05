@@ -1,4 +1,4 @@
-import { FormEvent, useRef } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ZodError } from 'zod';
 import Input from '../../UI/Input';
@@ -22,9 +22,14 @@ const UncontrolledForm = () => {
   const navigate = useNavigate();
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const errorsRef = useRef<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   const handleOneLevelZodError = ({ issues }: ZodError<unknown>) => {
     return issues.reduce((acc: Record<string, string>, cur) => {
-      acc[cur.path[0]] = cur.message;
+      if (!acc[cur.path[0]]) {
+        acc[cur.path[0]] = cur.message;
+      }
+
       return acc;
     }, {});
   };
@@ -40,16 +45,14 @@ const UncontrolledForm = () => {
 
     try {
       validationSchema.parse(transformUncontrolledFormData(formData));
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const handledError = handleOneLevelZodError(error);
-        errorsRef.current = handledError;
-      }
-    }
-
-    if (Object.keys(errorsRef.current).length === 0) {
       dispatch(setUncontrolledFormData(transformedData));
       navigate(Routes.Main);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const handledError = handleOneLevelZodError(error) || {};
+        setErrors(handledError);
+        errorsRef.current = handledError;
+      }
     }
   };
 
@@ -63,39 +66,35 @@ const UncontrolledForm = () => {
                 key={input.id}
                 ref={passwordRef}
                 passwordValue={passwordRef.current?.value}
-                error={errorsRef.current[input.name]}
+                error={errors[input.name]}
                 {...input}
               />
             );
           }
-          return (
-            <Input
-              key={input.id}
-              error={errorsRef.current[input.name]}
-              {...input}
-            />
-          );
+          return <Input key={input.id} error={errors[input.name]} {...input} />;
         })}
         <AutoComplete />
-        <RadioButton
-          id="female"
-          name="gender"
-          value="female"
-          label="Female"
-          error={errorsRef.current['gender']}
-          defaultChecked
-        />
-        <RadioButton
-          id="male"
-          name="gender"
-          value="male"
-          label="Male"
-          error={errorsRef.current['gender']}
-        />
+        <div className={styles.wrapper}>
+          <RadioButton
+            id="female"
+            name="gender"
+            value="female"
+            label="Female"
+            error={errors['gender']}
+            defaultChecked
+          />
+          <RadioButton
+            id="male"
+            name="gender"
+            value="male"
+            label="Male"
+            error={errors['gender']}
+          />
+        </div>
         <Checkbox
           id="accept_terms"
           name="accept_terms"
-          error={errorsRef.current['accept_terms']}
+          error={errors['accept_terms']}
           label="I agree to the terms and conditions"
         />
         <Button type="submit">Submit</Button>

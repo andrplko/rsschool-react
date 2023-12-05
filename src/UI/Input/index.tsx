@@ -15,7 +15,7 @@ interface FormFields extends FieldValues {
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   label: string;
-  ref?: MutableRefObject<HTMLInputElement | Record<string, string>>;
+  ref?: MutableRefObject<HTMLInputElement>;
   register?: UseFormRegister<FormFields>;
   error?: string;
   passwordValue?: string;
@@ -36,7 +36,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           className={styles.input}
         />
-        {passwordValue && <PasswordStrengthChecker password={passwordValue} />}
+        {name === 'password' && (
+          <PasswordStrengthChecker password={passwordValue} />
+        )}
         <p className={styles.error} role="alert">
           {error && error}
         </p>

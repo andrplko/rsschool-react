@@ -2,7 +2,11 @@ import classnames from 'classnames';
 import checkPasswordStrength from '../../utils/checkPasswordStrength';
 import styles from './PasswordStrengthChecker.module.scss';
 
-const PasswordStrengthChecker = ({ password = '' }: { password: string }) => {
+const PasswordStrengthChecker = ({
+  password = '',
+}: {
+  password: string | undefined;
+}) => {
   const passwordStrength = checkPasswordStrength(password);
 
   const progressClassNames = classnames(styles.progress, {
@@ -13,7 +17,7 @@ const PasswordStrengthChecker = ({ password = '' }: { password: string }) => {
   });
 
   return (
-    <div>
+    <div className={styles.container}>
       <progress
         value={passwordStrength}
         max="4"
