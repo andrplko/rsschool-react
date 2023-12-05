@@ -3,12 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../../UI/Button';
 import Form from './components/Form';
 import validationSchema from '../../utils/validationSchema';
-import PasswordStrengthChecker from '../../UI/PasswordStrengthChecker';
 import { useAppDispatch } from '../../store';
 import { setReactHookFormData } from '../../store/slices/ReactHookForm';
 import { Routes } from '../../router/routes';
-import { AutoComplete } from '../../UI/AutoComplete';
 import { transformFormData } from '../../utils/transformFormData';
+import Input from './components/Input';
+import RadioButton from '../../UI/RadioButton';
+import Checkbox from '../../UI/Checkbox';
+import FileUploader from '../../UI/FileUploader';
+import { AutoComplete } from '../../UI/AutoComplete';
+import PasswordStrengthChecker from '../../UI/PasswordStrengthChecker';
 import styles from './ReactHookForm.module.scss';
 
 interface FormFields extends FieldValues {
@@ -34,136 +38,85 @@ const ReactHookForm = () => {
   return (
     <div className={styles.container}>
       <Form<FormFields> schema={validationSchema} onSubmit={onSubmit}>
-        {({ register, watch, formState: { errors, isDirty, isValid } }) => (
+        {({ register, formState: { errors, isDirty, isValid }, watch }) => (
           <>
-            <div className={styles.wrapper}>
-              <label htmlFor="name" className={styles.label}>
-                Name
-                <input
-                  id="name"
-                  type="text"
-                  placeholder="Name"
-                  {...register('name')}
-                  className={styles.input}
-                />
-              </label>
-              <p className={styles.error}>{errors.name?.message}</p>
-            </div>
-
-            <div className={styles.wrapper}>
-              <label htmlFor="age" className={styles.label}>
-                Age
-                <input
-                  id="age"
-                  type="number"
-                  placeholder="Age"
-                  {...register('age')}
-                  className={styles.input}
-                />
-              </label>
-              <p className={styles.error}>{errors.age?.message}</p>
-            </div>
-
-            <div className={styles.wrapper}>
-              <label htmlFor="email" className={styles.label}>
-                Email
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="Email"
-                  {...register('email')}
-                  className={styles.input}
-                />
-              </label>
-              <p className={styles.error}>{errors.email?.message}</p>
-            </div>
-
-            <div className={styles.wrapper}>
-              <label htmlFor="password" className={styles.label}>
-                Password
-                <input
-                  id="password"
-                  type="password"
-                  placeholder="Password"
-                  {...register('password')}
-                  className={styles.input}
-                />
-              </label>
-              <PasswordStrengthChecker password={watch().password} />
-              <p className={styles.error}>{errors.password?.message}</p>
-            </div>
-
-            <div className={styles.wrapper}>
-              <label htmlFor="confirm_password" className={styles.label}>
-                Confirm password
-                <input
-                  id="confirm_password"
-                  type="password"
-                  placeholder="Confirm password"
-                  {...register('confirm_password')}
-                  className={styles.input}
-                />
-              </label>
-              <p className={styles.error}>{errors.confirm_password?.message}</p>
-            </div>
-
+            <Input
+              id="name"
+              label="Name"
+              type="text"
+              placeholder="Name"
+              registration={register('name')}
+              error={errors.name}
+            />
+            <Input
+              id="age"
+              label="Age"
+              type="number"
+              placeholder="Age"
+              registration={register('age')}
+              error={errors.age}
+            />
+            <Input
+              id="email"
+              label="Email"
+              type="email"
+              placeholder="Email"
+              registration={register('email')}
+              error={errors.email}
+            />
+            <Input
+              id="password"
+              label="Password"
+              type="password"
+              placeholder="Password"
+              registration={register('password')}
+              error={errors.password}
+            />
+            <PasswordStrengthChecker password={watch().password} />
+            <Input
+              id="confirm_password"
+              label="Confirm password"
+              type="password"
+              placeholder="Confirm password"
+              defaultChecked
+              registration={register('confirm_password')}
+              error={errors.confirm_password}
+            />
             <AutoComplete />
-            <div className={styles.wrapperTerms}>
-              <label htmlFor="gender-female" className={styles.label}>
-                <input
-                  id="gender-female"
-                  value="female"
-                  type="radio"
-                  defaultChecked
-                  {...register('gender')}
-                  className={styles.input}
-                />
-                Female
-              </label>
-              <p className={styles.error}>{errors.gender?.message}</p>
-            </div>
-
-            <div className={styles.wrapperTerms}>
-              <label htmlFor="gender-male" className={styles.label}>
-                <input
-                  id="gender-male"
-                  value="male"
-                  type="radio"
-                  {...register('gender')}
-                  className={styles.input}
-                />
-                Male
-              </label>
-              <p className={styles.error}>{errors.gender?.message}</p>
-            </div>
-
             <div className={styles.wrapper}>
-              <label htmlFor="picture" className={styles.label}>
-                Choose a picture
-                <input
-                  id="picture"
-                  type="file"
-                  accept=".jpg, .jpeg, .png"
-                  {...register('picture')}
-                  className={styles.input}
-                />
-              </label>
-              <p className={styles.error}>{errors.picture?.message}</p>
+              <RadioButton
+                id="female"
+                name="gender"
+                value="female"
+                label="Female"
+                registration={register('gender')}
+                error={errors.gender?.message}
+                defaultChecked
+              />
+              <RadioButton
+                id="male"
+                name="gender"
+                value="male"
+                label="Male"
+                registration={register('gender')}
+                error={errors.gender?.message}
+              />
             </div>
-
-            <div className={styles.wrapperTerms}>
-              <label htmlFor="accept_terms" className={styles.label}>
-                <input
-                  id="accept_terms"
-                  type="checkbox"
-                  {...register('accept_terms')}
-                  className={styles.input}
-                />
-                I agree to the terms and conditions
-              </label>
-              <p className={styles.error}>{errors.accept_terms?.message}</p>
-            </div>
-
+            <FileUploader
+              id="picture"
+              label="Choose a picture"
+              type="file"
+              accept=".jpg, .jpeg, .png"
+              registration={register('picture')}
+              error={errors.picture?.message}
+            />
+            <Checkbox
+              id="accept_terms"
+              name="accept_terms"
+              label="I agree to the terms and conditions"
+              registration={register('accept_terms')}
+              error={errors.accept_terms?.message}
+            />
             <Button type="submit" disabled={!isDirty || !isValid}>
               Submit
             </Button>
