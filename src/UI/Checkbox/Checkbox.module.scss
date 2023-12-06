@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  column-gap: 0.5rem;
+  max-width: max-content;
+  cursor: pointer;
+}
+
+.input {
+  cursor: pointer;
+}
+
+.label {
+  display: flex;
+  column-gap: 0.5rem;
+  user-select: none;
+  cursor: pointer;
+}
+
+.error {
+  height: 1.5rem;
+  color: $red-color;
+}

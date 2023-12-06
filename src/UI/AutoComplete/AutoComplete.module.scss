@@ -1,0 +1,20 @@
+.container {
+  position: relative;
+  cursor: pointer;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 188px;
+  padding: 4px;
+  background: $white-color;
+  border-radius: $border-radius;
+  border: 1px solid $grey-color;
+  transition: 0.5s ease-in-out;
+  overflow: scroll;
+  z-index: 10;
+  cursor: pointer;
+}

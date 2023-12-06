@@ -1,0 +1,19 @@
+.container {
+  max-width: 400px;
+  width: 100%;
+  padding: 1rem;
+  background-color: $white-color;
+  border: 1px solid $grey-color;
+  border-radius: $border-radius;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 1rem;
+}
