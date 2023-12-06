@@ -21,7 +21,6 @@ const UncontrolledForm = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const passwordRef = useRef<HTMLInputElement | null>(null);
-  const errorsRef = useRef<Record<string, string>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleOneLevelZodError = ({ issues }: ZodError<unknown>) => {
@@ -49,9 +48,8 @@ const UncontrolledForm = () => {
       navigate(Routes.Main);
     } catch (error) {
       if (error instanceof ZodError) {
-        const handledError = handleOneLevelZodError(error) || {};
+        const handledError = handleOneLevelZodError(error);
         setErrors(handledError);
-        errorsRef.current = handledError;
       }
     }
   };
