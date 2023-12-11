@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import styles from './Dropdown.module.scss';
 
@@ -14,6 +14,7 @@ const Dropdown = ({ perPage, setPerPage, setCurrentPage }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<string>('Select value');
   const [selectedItem, setSelectedItem] = useState<number>(perPage);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const toggleOpen = () => setIsOpen(!isOpen);
 
   const handleItemClick = (value: number) => {
@@ -33,8 +34,25 @@ const Dropdown = ({ perPage, setPerPage, setCurrentPage }: DropdownProps) => {
       [styles.selected]: value === selectedItem,
     });
 
+  useEffect(() => {
+    function close(e: MouseEvent) {
+      const { target } = e;
+      if (target instanceof Node && !dropdownRef.current?.contains(target)) {
+        setIsOpen(false);
+      }
+    }
+
+    if (isOpen) {
+      window.addEventListener('click', close);
+    }
+
+    return function removeListener() {
+      window.removeEventListener('click', close);
+    };
+  }, [isOpen]);
+
   return (
-    <div className={styles.container} onClick={toggleOpen}>
+    <div className={styles.container} ref={dropdownRef} onClick={toggleOpen}>
       <div className={dropdownHeadClassNames}>{selected}</div>
       {isOpen && (
         <div className={styles.dropdown}>
